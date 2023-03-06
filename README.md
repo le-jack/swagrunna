@@ -10,7 +10,13 @@ note: if you don't want to install mono, simply comment out the last line of csr
 
 ## Usage
 
-./csrunner.sh <port>
+simply give it a port, or it will default to 443
+
+./csrunner.sh \<port\>
 
 
 
+TODO:
+
+- Support other payloads.
+- Combine with other similar tools.
